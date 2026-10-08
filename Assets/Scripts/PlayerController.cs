@@ -1,15 +1,22 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 public class PlayerController : MonoBehaviour
 
 {
     public float speed = 0;
+    public TextMeshProUGUI countText;
     private Rigidbody rb;
+    private int count;
     private float movementX;
     private float movementY;
+    public GameObject winTextObject;
     void Start()
     {
+        winTextObject.SetActive(false);
+        count = 0;
         rb = GetComponent<Rigidbody>();
+        SetCountText();
     }
 
     void FixedUpdate()
@@ -24,12 +31,22 @@ public class PlayerController : MonoBehaviour
         movementX = movementVector.x;
         movementY = movementVector.y;
     }
+    void SetCountText()
+    {
+        countText.text = "Count: " + count.ToString();
+        if (count >= 8)
+        {
+            winTextObject.SetActive(true);
+        }
+    }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("PickUp"))
         {
             other.gameObject.SetActive(false);
+            count = count + 1;
+            SetCountText();
         }
     }
 }
